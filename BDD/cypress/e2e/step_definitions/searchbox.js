@@ -1,27 +1,32 @@
 import SearchboxPage from '../page_objects/searchbox.page';
 const { Given, When, Then} = require('@badeball/cypress-cucumber-preprocessor');
 
+let keyword = ''; // Menggunakan let jika value dapat berubah karena berupa keyword
 
 Given('I open the index page', () => {
-    SearchboxPage.visit();
+    SearchboxPage.visitURL();
 })
 
 When('I enter valid keyword in the searchbox', () => {
-    SearchboxPage.searchValidKeyword('online banking');
-    SearchboxPage.pressEnter();
+    cy.fixture('search').then((data) => {
+        keyword = data.validKeyword;
+        cy.searchbox(keyword);
+    });
+    cy.wait(2000);  
 })
 
 Then('I should see search results of valid keyword', () => {
-    cy.wait(2000);
-    cy.get('div.top_offset').should('contain.text','The following pages were found for the query: online banking')
+    SearchboxPage.validSearch().should('be.visible')
 })
 
 When('I enter invalid keyword in the searchbox', () => {
-    SearchboxPage.searchInvalidKeyword('qwerty');
-    SearchboxPage.pressEnter();
+    cy.fixture('search').then((keyword) => {
+        keyword = keyword.invalidKeyword;
+        cy.searchbox(keyword);
+    });
+    cy.wait(2000);
 })
 
 Then('I should see search results of invalid keyword', () => {
-    cy.wait(2000);
-    cy.get('div.top_offset').should('be.visible')
+    SearchboxPage.invalidSearch().should('be.visible')
 })

@@ -1,21 +1,14 @@
-const URL = 'http://zero.webappsecurity.com/index.html';
-const SEARCHBOX = '#searchTerm';
-
 class SearchboxPage {
-    static visit() {
-        cy.visit(URL);
+    static visitURL() {
+        cy.visit('http://zero.webappsecurity.com/index.html');
     }
 
-    static searchValidKeyword(online_banking) {
-        cy.get(SEARCHBOX).clear().type(online_banking);
+    static validSearch() {
+        return cy.get('h2');
     }
-
-    static searchInvalidKeyword(qwerty) {
-        cy.get(SEARCHBOX).clear().type(qwerty);
-    }
-
-    static pressEnter() {
-        cy.get(SEARCHBOX).type('{enter}');
+    
+    static invalidSearch() {
+        return cy.get('div.top_offset');
     }
 }
 
